@@ -290,7 +290,7 @@ export default function Home() {
               <div className="border-l-2 border-[var(--accent)] pl-4 py-2 text-sm text-[var(--muted)]">
                 Only free arithmetic (Tier 0) will work right now. Add a Groq or Fireworks API key, or
                 point at a running local Ollama, in{" "}
-                <button type="button" className="underline text-[var(--foreground)]" onClick={() => setShowCredentials(true)}>
+                <button type="button" className="underline text-[var(--foreground)] cursor-pointer" onClick={revealCredentials}>
                   Credentials
                 </button>{" "}
                 to unlock the rest.
