@@ -50,8 +50,7 @@ Browser
 ```
 
 - **Tier 0 (deterministic, free, client-side):** a hand-written tokenizer,
-  recursive-descent parser, AST, and evaluator for `+ - * / ^ ()`. No
-  `eval()`. Runs entirely in the browser; the server is never involved.
+  recursive-descent parser, AST, and evaluator for `+ - * / ^ ()`. Runs entirely in the browser; the server is never involved.
 - **Tier 1 (your local model, free, client-side):** `lib/tier1/ollama.ts` is
   called directly from the browser against whatever endpoint you configured.
   A visitor with no reachable Ollama triggers no error. A short reachability
