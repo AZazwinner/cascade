@@ -1,13 +1,13 @@
 # Cascade Router
 
-A tiered, cost-aware query router — **bring your own credentials**. Type a
+A tiered, cost-aware query router: **bring your own credentials**. Type a
 query and it's decomposed into independent sub-tasks, each routed through
 the cheapest tool capable of answering it: a free deterministic evaluator,
 then *your own* local Ollama, escalating to *your own* paid API key only
 for the pieces that actually need it.
 
 This is a public, stateless deployment. There is no login, no shared
-account, and no bill that lands on the person running this site — every
+account, and no bill that lands on the person running this site. Every
 visitor supplies their own credentials, used only for their own queries, in
 their own browser tab.
 
@@ -19,20 +19,20 @@ their own browser tab.
   **Credentials** panel and add one or both:
   - An **Ollama endpoint** (default `http://localhost:11434`) if you have
     [Ollama](https://ollama.com) running on your own machine. This tier is
-    always free, but only reachable if you're actually running it locally —
+    always free, but only reachable if you're actually running it locally;
     most visitors won't be, and that's fine, the app just skips it silently.
   - A **Groq or Fireworks API key** for the paid tier. You pay your own
-    provider directly, at their published rates — we never see a bill for
+    provider directly, at their published rates; we never see a bill for
     your usage.
 - **Your credentials never persist on our side.** The Ollama endpoint is
-  called *directly from your browser* — our server has no route to your
+  called *directly from your browser*; our server has no route to your
   machine and never sees that traffic. Your API key lives only in this
   browser tab's `sessionStorage` and is sent to our server *only* as a
   per-request header at the moment a sub-task needs the paid tier; it is
   never written to a database and never logged. Close the tab and it's
   gone.
 - **Nothing is shared between visitors.** The session log, tier breakdown,
-  and savings chart are all local component state in your browser — there
+  and savings chart are all local component state in your browser; there
   is no server-side database and no cross-visitor log to leak into.
 
 ## Architecture
@@ -49,33 +49,33 @@ Browser
   -> Aggregator (client-side)          combines answers, computes cost/savings for this session only
 ```
 
-- **Tier 0 (deterministic, free, client-side):** a hand-written tokenizer ->
-  recursive-descent parser -> AST -> evaluator for `+ - * / ^ ()`. No
+- **Tier 0 (deterministic, free, client-side):** a hand-written tokenizer,
+  recursive-descent parser, AST, and evaluator for `+ - * / ^ ()`. No
   `eval()`. Runs entirely in the browser; the server is never involved.
 - **Tier 1 (your local model, free, client-side):** `lib/tier1/ollama.ts` is
   called directly from the browser against whatever endpoint you configured.
-  A visitor with no reachable Ollama triggers no error — a short reachability
+  A visitor with no reachable Ollama triggers no error. A short reachability
   ping (`lib/client/ollamaStatus.ts`) resolves once per session and the app
   just treats Tier 1 as unavailable and falls through, rather than letting
   every sub-task's real call time out one by one.
 - **Tier 2 (your paid key, last resort, server-proxied):** `app/api/tier2`
   is the *only* server involvement in the whole flow. It's a thin proxy: it
   validates the request, applies a light per-IP rate limit, and calls
-  Groq/Fireworks with the API key from your `x-api-key` header — never a
+  Groq/Fireworks with the API key from your `x-api-key` header, never a
   key from our own environment. See `lib/tier2/`.
 
 ## Tech stack
 
-- Next.js (App Router) + TypeScript — a single static/serverless app, no persistent server
+- Next.js (App Router) + TypeScript: a single static/serverless app, no persistent server
 - Ollama, called client-side, for local inference
 - Groq / Fireworks, called server-side with your key, for remote inference
 - Chart.js (via `react-chartjs-2`) for the savings-over-time chart
-- No database, anywhere — session state is browser-local; credentials are `sessionStorage`-only
+- No database, anywhere. Session state is browser-local; credentials are `sessionStorage`-only
 - Vitest for the Tier 0 unit tests
 
 ## Running it locally
 
-There's no `.env` setup — local dev uses the same Credentials panel a real
+There's no `.env` setup. Local dev uses the same Credentials panel a real
 visitor would:
 
 ```bash
@@ -83,7 +83,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Try `47 * 82` first —
+Open [http://localhost:3000](http://localhost:3000). Try `47 * 82` first:
 it works immediately. For the rest, open **Credentials** and:
 
 1. Optionally install [Ollama](https://ollama.com) and pull a model:
@@ -94,7 +94,7 @@ it works immediately. For the rest, open **Credentials** and:
    automatically once it's running.
 2. Paste your own Groq or Fireworks API key into the **API key** field.
 
-That's it — the same flow works identically in production, because it *is*
+That's it. The same flow works identically in production, because it *is*
 the production flow.
 
 ## Testing
@@ -114,11 +114,11 @@ Explain recursion and write a Python function to calculate the factorial of n
 
 The explanation should land on Tier 1 (your local model) and the code
 sub-task should escalate to Tier 2 (code generation is on the "needs a
-strong model" list) — confirm both show up correctly in the sub-task ledger
+strong model" list). Confirm both show up correctly in the sub-task ledger
 with real token counts and a non-zero cost only on the Tier 2 row.
 
 To see the degraded path, clear the API key and point the Ollama endpoint at
-something unreachable, then run a non-math query — it should resolve
+something unreachable, then run a non-math query. It should resolve
 instantly with a clear "needs a Tier 2 API key" message per sub-task, never
 an unhandled error.
 
@@ -132,7 +132,7 @@ POST /api/tier2
 ```
 
 That's the entire server-side API surface. There is no `/api/query` and no
-`/api/metrics` — decomposition, Tier 0, and Tier 1 all happen client-side,
+`/api/metrics`: decomposition, Tier 0, and Tier 1 all happen client-side,
 and session metrics are computed from local state, never fetched from a
 server log.
 
@@ -144,7 +144,7 @@ server log.
   an oversized payload.
 - **Rate limiting:** `/api/tier2` applies a light, best-effort per-IP limit
   (`lib/rateLimit.ts`, in-memory, 20 requests/minute by default). This
-  protects our own serverless function's execution budget from abuse — it
+  protects our own serverless function's execution budget from abuse. It
   is not a cost-control measure for AI usage, since that cost lands on each
   visitor's own provider account, not ours. Being in-memory, it resets on
   cold start and isn't a strict cross-instance guarantee; that's an accepted
@@ -152,7 +152,7 @@ server log.
 - **Security headers** (`next.config.ts`): CSP, `X-Content-Type-Options`,
   `X-Frame-Options`, `Referrer-Policy`, HSTS. One thing to know before
   "fixing" it: `connect-src` allows any `http:`/`https:` origin rather than
-  a fixed allowlist. That's deliberate, not an oversight — Tier 1 fetches
+  a fixed allowlist. That's deliberate, not an oversight. Tier 1 fetches
   whatever Ollama endpoint a visitor types into Settings, which can't be
   known ahead of time, so locking `connect-src` down would silently break
   the app's core feature. `script-src` includes `'unsafe-inline'` for the
@@ -160,7 +160,7 @@ server log.
   the page into per-request dynamic rendering, which would cost this app
   its static generation (and the CDN-friendly, serverless-first deployment
   story that comes with it) just to avoid a directive that isn't this
-  app's actual XSS barrier anyway — there's no `dangerouslySetInnerHTML`
+  app's actual XSS barrier anyway. There's no `dangerouslySetInnerHTML`
   anywhere and model output is rendered through `react-markdown` with no
   raw-HTML plugin, so React's own JSX escaping is what actually stops
   script injection here.
@@ -174,7 +174,7 @@ no persistent server and no database:
 vercel deploy
 ```
 
-There are no required environment variables to set on the platform — the
+There are no required environment variables to set on the platform. The
 BYOK model means production visitor traffic never touches a server-side
 secret. If you want a convenience default for your *own* testing, it must
 go in the browser's Credentials panel, not an env var, since the whole
