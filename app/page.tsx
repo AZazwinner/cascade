@@ -85,7 +85,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!highlightCredentials) return;
-    credentialsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     const timer = setTimeout(() => setHighlightCredentials(false), 2200);
     return () => clearTimeout(timer);
   }, [highlightCredentials]);
