@@ -30,6 +30,9 @@ export const metadata: Metadata = {
     title: "Cascadex Router",
     description,
   },
+  verification: {
+    google: "rYjzs-6J2BlMYz3QkO3YXw6hW_TVR9g406fAvKM8tK0",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
