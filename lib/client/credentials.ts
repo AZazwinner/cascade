@@ -19,7 +19,7 @@ export const DEFAULT_CREDENTIALS: Credentials = {
   apiKey: "",
 };
 
-const STORAGE_KEY = "cascade:credentials";
+const STORAGE_KEY = "cascadex:credentials";
 
 function loadCredentials(): Credentials {
   try {

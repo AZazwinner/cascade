@@ -205,7 +205,7 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <span className="w-7 h-7 bg-[var(--accent)] shrink-0" aria-hidden="true" />
             <div className="flex flex-col leading-tight">
-              <span className="text-lg font-bold tracking-tight">CASCADE</span>
+              <span className="text-lg font-bold tracking-tight">CASCADEX</span>
               <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
                 Tiered cost-aware query router
               </span>

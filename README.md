@@ -1,4 +1,4 @@
-# Cascade Router
+# Cascadex Router
 
 A tiered, cost-aware query router: **bring your own credentials**. Type a
 query and it's decomposed into independent sub-tasks, each routed through

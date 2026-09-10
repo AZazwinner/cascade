@@ -16,20 +16,18 @@ const description =
   "Tiered, cost-aware query router: decompose a query into sub-tasks and route each through the cheapest tier that can answer it. Bring your own Ollama endpoint and API key -- nothing is ever stored on our servers.";
 
 export const metadata: Metadata = {
-  title: "Cascade Router",
+  metadataBase: new URL("https://casx.vercel.app"),
+  title: "Cascadex Router",
   description,
-  icons: {
-    icon: "/favicon.ico",
-  },
   openGraph: {
-    title: "Cascade Router",
+    title: "Cascadex Router",
     description,
     type: "website",
-    siteName: "Cascade Router",
+    siteName: "Cascadex Router",
   },
   twitter: {
     card: "summary",
-    title: "Cascade Router",
+    title: "Cascadex Router",
     description,
   },
 };
